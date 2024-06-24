@@ -1,1 +1,52 @@
-<p>booking works!</p>
+<body>
+    <div class="container">
+        <div class="header">
+            <button class="btn">Välj parkering</button>
+            <div class="legend">
+                <span class="dot available"></span> Lediga
+                <span class="dot unavailable"></span> Ej bokbar
+                <span class="dot selected"></span> Valda
+            </div>
+        </div>
+        <div class="calendar">
+            <div class="month">
+                <span class="month-text">{{ getMonth() }}</span>
+                <span class="arrow">&lt;</span>
+                <span class="arrow">&gt;</span>
+            </div>
+            <div class="days">
+                <div class="day">M</div>
+                <div class="day">T</div>
+                <div class="day">O</div>
+                <div class="day">T</div>
+                <div class="day">F</div>
+                <div class="day">L</div>
+                <div class="day">S</div>
+                <!-- Calendar dates go here -->
+                <div class="day" *ngFor="let day of daysInMonth">{{ day }}</div>
+            </div>
+        </div>
+        <div class="employee-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Namn</th>
+                        <th>Parkering</th>
+                        <th>Datum</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>01</td>
+                        <td>Jane Doe</td>
+                        <td>61</td>
+                        <td>2024-06-01</td>
+                    </tr>
+                    <!-- More rows as needed -->
+                </tbody>
+            </table>
+        </div>
+        <button class="book-btn">Boka parkering för den valda dagen</button>
+    </div>
+</body>
