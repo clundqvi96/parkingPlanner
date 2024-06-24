@@ -1,1 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
+body {
+    background-image: url('assets/background.png');
+    background-size: cover; /* Cover the entire page */
+    background-position: center; /* Center the background image */
+    background-repeat: no-repeat; /* Do not repeat the image */
+  }
+
+  html, body {
+    height: 100%; /* Ensure at least full viewport height */
+    margin: 0; /* Remove default margin */
+    padding: 0; /* Remove default padding */
+}

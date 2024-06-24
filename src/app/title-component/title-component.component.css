@@ -1,0 +1,18 @@
+.title-container {
+    text-align: center; /* Aligns the title to the center */
+    position: absolute; /* Positions the title container absolutely */
+    width: 100%; /* Ensures it spans the full width */
+    top: 0; /* Positions at the top of the viewport */
+    font-family: 'Open Sans', sans-serif; /* Cool, modern font for the main title */
+  }
+  
+  .main-title {
+    color: rgba(0, 0, 0, 0.69); /* Black with 69% transparency */
+    font-size: 3em; /* Adjust size as needed */
+  }
+  
+  .sub-title {
+    color: rgba(0, 0, 0, 0.69); /* Black with 69% transparency */
+    font-family: 'Pacifico', cursive; /* Gorgeous cursive font for the subtitle */
+    font-size: 1.5em; /* Adjust size as needed */
+  }

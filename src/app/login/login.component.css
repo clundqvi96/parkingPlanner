@@ -1,0 +1,79 @@
+
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Använder hela skärmens höjd */
+}
+
+.login-container {
+    font-family: 'Open Sans', sans-serif;
+    color: rgba(0, 0, 0, 0.69);
+    width: 80%; /* Sätter bredden till 80% av .center-container */
+    max-width: 500px; /* Maxbredd för att undvika för bred layout på stora skärmar */
+}
+
+.input-field, .login-btn {
+    width: 100%; /* Ändrar bredden till 100% av .login-container */
+    height: 50px; /* Behåller samma höjd */
+    font-size: 20px; /* Större text */
+    background-color: rgba(0, 0, 0, 0.69);
+    color: white;
+    border: none;
+    padding: 10px 0; /* Justerar padding för att behålla höjd men inte påverka bredden */
+    border-radius: 10px;
+    padding-left: 40px; /* Lägger till padding till vänster för att ge plats för ikonen */
+    cursor: pointer;
+    display: block; /* Säkerställer att elementet tar upp hela bredden */
+    margin: 0 auto; /* Centrerar elementet horisontellt om nödvändigt */
+    margin-top: 20px; /* Lägger till lite mellanrum mellan elementen */
+}
+.login-btn {
+    width: 100%;
+    height: auto; /* Ändrar från en fast höjd till auto */
+    font-size: 20px;
+    background-color: rgba(0, 0, 0, 0.69);
+    color: white;
+    border: none;
+    padding: 20px 0; /* Ökar padding för att justera höjden */
+    border-radius: 10px;
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    margin-top: 20px;
+}
+  
+  .input-icon {
+    position: absolute;
+    left: 10px;
+    top: 60%;
+    transform: translateY(-50%);
+    color: rgba(255, 255, 255, 0.69);
+  }
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px; /* Adjust based on your layout */
+  }
+
+  .forgot-password {
+    color: rgba(0, 0, 0, 0.69); /* Svart med samma transparens som de andra elementen */
+    text-align: right; /* Texten positioneras till höger */
+    margin-top: 10px; /* Lägg till lite utrymme mellan knappen och texten */
+    width: 100%; /* Säkerställer att texten kan positioneras till höger inom sin container */
+    font-size: 20px; /* Justera storleken efter behov */
+    cursor: pointer; /* Visar att texten är klickbar */
+  }
+      /*make a hover effect*/
+      .forgot-password:hover {
+        color: rgb(0, 0, 0); /* Change the color to fully opaque black on hover */
+        .forgot-password:hover {
+            color: rgb(0, 0, 0);
+            transition: color 0.3s ease; /* Add transition property for smooth effect */
+        }
+        
+    }
+    
+  
+  
