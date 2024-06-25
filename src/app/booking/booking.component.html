@@ -1,4 +1,5 @@
 <body>
+    <div class="overlay">
     <div class="container">
         <div class="header">
             <button class="btn">Välj parkering</button>
@@ -15,15 +16,15 @@
                 <span class="arrow">&gt;</span>
             </div>
             <div class="days">
-                <div class="day">M</div>
-                <div class="day">T</div>
-                <div class="day">O</div>
-                <div class="day">T</div>
-                <div class="day">F</div>
-                <div class="day">L</div>
-                <div class="day">S</div>
+                <div class="day-label">M</div>
+                <div class="day-label">T</div>
+                <div class="day-label">O</div>
+                <div class="day-label">T</div>
+                <div class="day-label">F</div>
+                <div class="day-label">L</div>
+                <div class="day-label">S</div>
                 <!-- Calendar dates go here -->
-                <div class="day" *ngFor="let day of daysInMonth">{{ day }}</div>
+                <div class="day-number" *ngFor="let day of daysInMonth">{{ day }}</div>
             </div>
         </div>
         <div class="employee-list">
@@ -49,4 +50,5 @@
         </div>
         <button class="book-btn">Boka parkering för den valda dagen</button>
     </div>
+</div>
 </body>

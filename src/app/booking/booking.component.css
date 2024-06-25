@@ -1,3 +1,16 @@
+.overlay {
+    position: fixed; /* Eller 'absolute' beroende på din layout */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5); /* Svart med transparens */
+    backdrop-filter: blur(5px); /* Suddighetseffekt */
+    z-index: 1; /* Se till att den ligger över andra element */
+    display: flex; /* Använd flexbox för att centrera innehållet */
+    justify-content: center; /* Centrera horisontellt */
+    align-items: center; /* Centrera vertikalt */
+}
 body {
     font-family: Arial, sans-serif;
     background-color: #333;
@@ -10,7 +23,7 @@ body {
 }
 
 .container {
-    background-color: #555;
+    background-color: rgba(85, 85, 85, 0.69);
     border-radius: 10px;
     padding: 20px;
     width: 80%;
@@ -75,6 +88,10 @@ body {
 .month .arrow {
     font-size: 24px;
     cursor: pointer;
+}
+
+.day-label {
+    font-weight: bold;
 }
 
 .days {
