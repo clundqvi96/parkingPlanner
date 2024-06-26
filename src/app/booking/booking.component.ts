@@ -1,18 +1,42 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-booking',
   templateUrl: './booking.component.html',
-  styleUrl: './booking.component.css'
+  styleUrls: ['./booking.component.css']
 })
 export class BookingComponent implements OnInit {
   daysInMonth: number[] = [];
+  selectedParking: string = '';
+  selectedDate: number | null = null;
+  isSelectedDateSpecial: boolean = false;
+  selectedDay: any = null;
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit(): void {
     this.generateDaysInMonth();
     this.getMonth();
+  }
+
+ 
+  selectDay(day: number) {
+    this.selectedDate = day;
+  }
+
+  selectParking(parking: string): void { // Added explicit return type
+    this.selectedParking = parking;
+  }
+
+
+onSelect(value: string) {
+    console.log("Valt parkeringsnummer:", value);
+    // Hantera valt värde här (t.ex. uppdatera en modell eller göra en förfrågan)
+}
+
+    logout() {
+    this.router.navigate(['/']);
   }
 
   generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
@@ -23,7 +47,7 @@ export class BookingComponent implements OnInit {
       date.setDate(date.getDate() + 1);
     }
   }
-  // Add the following method that gets curerent month and return it as string and converts it to swedish. the first letter is capitalized.
+  
   getMonth() {
     const month = new Date().toLocaleString('sv-SE', { month: 'long' });
     return month.charAt(0).toUpperCase() + month.slice(1);

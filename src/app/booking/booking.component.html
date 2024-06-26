@@ -1,8 +1,26 @@
-<body>
-    <div class="overlay">
+
+<div class="overlay">
+    <div class="logout-container">
+        <a class="logout-link" (click)="logout()">
+            <i class="fa fa-sign-out"></i> Logga ut
+        </a>
+    </div>
+    <div class="centered-content">
+        <div class="rounded-rectangle">
+            <h1>Välj datum för att boka parkering</h1>
+        </div>
+    
     <div class="container">
         <div class="header">
-            <button class="btn">Välj parkering</button>
+            <div class="parking-selection">
+                <label for="parking">Välj parkering:</label>
+                <div class="buttons-row">
+                  <button class="btn" [class.active]="selectedParking === '61'" (click)="selectParking('61')">61</button>
+                  <button class="btn" [class.active]="selectedParking === '101'" (click)="selectParking('101')">101</button>
+                  <button class="btn" [class.active]="selectedParking === '105'" (click)="selectParking('105')">105</button>
+                  <button class="btn" [class.active]="selectedParking === '102'" (click)="selectParking('102')">102</button>
+                </div>
+              </div>
             <div class="legend">
                 <span class="dot available"></span> Lediga
                 <span class="dot unavailable"></span> Ej bokbar
@@ -24,8 +42,11 @@
                 <div class="day-label">L</div>
                 <div class="day-label">S</div>
                 <!-- Calendar dates go here -->
-                <div class="day-number" *ngFor="let day of daysInMonth">{{ day }}</div>
-            </div>
+                <div class="day-container" *ngFor="let day of daysInMonth; let i = index" 
+                (click)="selectDay(day)" [class.selected-day]="selectedDate === day">
+                 <label for="day-{{i}}" class="day-number">{{ day }}</label>
+                </div>
+</div>
         </div>
         <div class="employee-list">
             <table>
@@ -44,11 +65,29 @@
                         <td>61</td>
                         <td>2024-06-01</td>
                     </tr>
+                    <tr>
+                        <td>01</td>
+                        <td>Jane Doe</td>
+                        <td>61</td>
+                        <td>2024-06-01</td>
+                    </tr>
+                    <tr>
+                        <td>01</td>
+                        <td>Jane Doe</td>
+                        <td>61</td>
+                        <td>2024-06-01</td>
+                    </tr>
+                    <tr>
+                        <td>01</td>
+                        <td>Jane Doe</td>
+                        <td>61</td>
+                        <td>2024-06-01</td>
+                    </tr>
                     <!-- More rows as needed -->
                 </tbody>
             </table>
         </div>
         <button class="book-btn">Boka parkering för den valda dagen</button>
     </div>
-</div>
-</body>
+ </div>
+ </div>
