@@ -29,9 +29,9 @@
         </div>
         <div class="calendar">
             <div class="month">
+                <span class="arrow" (click)="goToPreviousMonth()">&lt;</span>
                 <span class="month-text">{{ getMonth() }}</span>
-                <span class="arrow">&lt;</span>
-                <span class="arrow">&gt;</span>
+                <span class="arrow" (click)="goToNextMonth()">&gt;</span>
             </div>
             <div class="days">
                 <div class="day-label">M</div>

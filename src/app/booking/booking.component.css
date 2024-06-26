@@ -230,13 +230,13 @@ td {
 
 /* Media query för skärmar mindre än 1200px */
 @media (max-width: 1200px) {
-    .container {
+    .container, .rounded-rectangle {
         width: 70%; /* Öka bredden för att fylla mer av skärmen */
         padding: 10px; /* Lägg till lite padding för att undvika att innehållet rör vid skärmkanterna */
     }
 
     .legend {
-        font-size: 8px;
+        font-size: 12px;
     }
 
     .days, .parking-selection, .buttons-row {

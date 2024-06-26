@@ -11,7 +11,7 @@ export class BookingComponent implements OnInit {
   selectedParking: string = '';
   selectedDate: number | null = null;
   isSelectedDateSpecial: boolean = false;
-  selectedDay: any = null;
+  currentDate: Date = new Date();
 
   constructor(private router: Router) { }
 
@@ -48,8 +48,17 @@ onSelect(value: string) {
     }
   }
   
-  getMonth() {
-    const month = new Date().toLocaleString('sv-SE', { month: 'long' });
-    return month.charAt(0).toUpperCase() + month.slice(1);
+  getMonth(): string {
+    return this.currentDate.toLocaleString('sv-SE', { month: 'long' });
+  }
+
+  goToNextMonth(): void {
+    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+    this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+  }
+
+  goToPreviousMonth(): void {
+    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+    this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
   }
 }
