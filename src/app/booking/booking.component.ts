@@ -9,7 +9,7 @@ import { Router } from '@angular/router';
 export class BookingComponent implements OnInit {
   daysInMonth: number[] = [];
   selectedParking: string = '';
-  selectedDate: number | null = null;
+  selectedDate: string | null = null;
   isSelectedDateSpecial: boolean = false;
   currentDate: Date = new Date();
 
@@ -22,7 +22,22 @@ export class BookingComponent implements OnInit {
 
  
   selectDay(day: number) {
-    this.selectedDate = day;
+    this.currentDate.setDate(day);
+    const year = this.currentDate.getFullYear();
+    // Ensuring month and day are two digits
+    const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
+    const date = this.currentDate.getDate().toString().padStart(2, '0');
+    this.selectedDate = `${year}-${month}-${date}`;
+    console.log("Valt datum:", this.selectedDate);
+  }
+
+  isSelectedDate(day: number): boolean {
+    const year = this.currentDate.getFullYear();
+    const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
+    // Ensure the day is two digits for comparison
+    const date = day.toString().padStart(2, '0');
+    const formattedDate = `${year}-${month}-${date}`;
+    return this.selectedDate === formattedDate;
   }
 
   selectParking(parking: string): void { // Added explicit return type

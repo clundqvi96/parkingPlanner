@@ -43,7 +43,7 @@
                 <div class="day-label">S</div>
                 <!-- Calendar dates go here -->
                 <div class="day-container" *ngFor="let day of daysInMonth; let i = index" 
-                (click)="selectDay(day)" [class.selected-day]="selectedDate === day">
+                (click)="selectDay(day)" [class.selected-day]="isSelectedDate(day)">
                  <label for="day-{{i}}" class="day-number">{{ day }}</label>
                 </div>
 </div>
