@@ -227,3 +227,62 @@ td {
     font-size: 18px;
     width: 100%;
 }
+
+/* Media query för skärmar mindre än 1200px */
+@media (max-width: 1200px) {
+    .container {
+        width: 70%; /* Öka bredden för att fylla mer av skärmen */
+        padding: 10px; /* Lägg till lite padding för att undvika att innehållet rör vid skärmkanterna */
+    }
+
+    .legend {
+        font-size: 8px;
+    }
+
+    .days, .parking-selection, .buttons-row {
+        
+        align-items: center; /* Centrera elementen */
+        gap: 5px; /* Minska gapet mellan elementen */
+    }
+
+    .btn {
+        width: 90%; /* Gör knappar och dagnummer bredare för att fylla utrymmet bättre */
+    }
+
+    .day-number {
+        width: 30px; /* Öka bredden på dagnumret för att göra det lättare att klicka på mindre skärmar */
+        height: 30px;
+        line-height: 30px; /* Centrera texten vertikalt */
+    }
+}
+
+/* Media query för skärmar mindre än 768px (typiska telefonstorlekar) */
+@media (max-width: 768px) {
+    .container, .overlay, .rounded-rectangle, .centered-content {
+        width: 100%; /* Använd hela skärmens bredd */
+        margin: 0; /* Ta bort marginaler */
+        padding: 5px; /* Minska padding */
+        box-sizing: border-box; /* Inkludera padding i elementets totala bredd */
+    }
+
+    .day-number {
+        width: 20px; /* Minska ytterligare för små skärmar */
+        height: 20px;
+        line-height: 20px; /* Anpassa line-height för att behålla texten centrerad */
+        font-size: smaller; /* Minska textstorleken för att passa mindre skärmar */
+    }
+
+    .logout-container {
+        top: 10px;
+        right: 10px;
+    }
+
+    .day-label, .month .month-text, .month .arrow, .parking-selection label {
+        font-size: smaller; /* Minska textstorleken för att passa mindre skärmar */
+    }
+
+    .days {
+        width: 95%; /* Använd hela bredden för att passa skärmen */
+        grid-template-columns: repeat(7, 14%); /* Justera dagarnas layout för att passa skärmen */
+    }
+}
