@@ -43,9 +43,11 @@
                 <div class="day-label">S</div>
                 <!-- Calendar dates go here -->
                 <div class="day-container" *ngFor="let day of daysInMonth; let i = index" 
-                (click)="selectDay(day)" [class.selected-day]="isSelectedDate(day)">
-                 <label for="day-{{i}}" class="day-number">{{ day }}</label>
-                </div>
+     (click)="day.isSelectable ? selectDay(day.date) : null" 
+     [class.selected-day]="isSelectedDate(day.date)"
+     [class.not-selectable]="!day.isSelectable">
+  <label for="day-{{i}}" class="day-number">{{ day.date }}</label>
+</div>
 </div>
         </div>
         <div class="employee-list">
@@ -87,7 +89,7 @@
                 </tbody>
             </table>
         </div>
-        <button class="book-btn">Boka parkering för den valda dagen</button>
+        <button class="book-btn" (click)="bookParking()">Boka parkering för den valda dagen</button>
     </div>
  </div>
  </div>
