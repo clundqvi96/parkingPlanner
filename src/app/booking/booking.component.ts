@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { response } from 'express';
+//import { Router } from '@angular/router';
+import { BookingService } from '../services/booking.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Component({
   selector: 'app-booking',
@@ -13,8 +15,9 @@ export class BookingComponent implements OnInit {
   selectedDate: string | null = null;
   isSelectedDateSpecial: boolean = false;
   currentDate: Date = new Date();
+  
 
-  constructor(private router: Router) { }
+  constructor(private bookingService: BookingService) { }
 
   ngOnInit(): void {
     this.generateDaysInMonth();
@@ -65,18 +68,30 @@ onSelect(value: string) {
 }
 
     logout() {
-    this.router.navigate(['/']);
+    (['/']);
   }
 
-  generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
+   
+  async generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
     this.daysInMonth = [];
     let today = new Date();
-    today.setHours(0, 0, 0, 0); // Nollställ tid till början av dagen för jämförelse
+    today.setHours(0, 0, 0, 0); // Reset time to the start of the day for comparison
     let date = new Date(year, month, 1);
-    while (date.getMonth() === month) {
-      const isSelectable = date >= today; // Kontrollera om datumet är idag eller i framtiden
-      this.daysInMonth.push({ date: date.getDate(), isSelectable });
-      date.setDate(date.getDate() + 1);
+    const endDate = new Date(year, month + 1, 0); // Last day of the month
+    const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`; // Format month string as YYYY-MM
+  
+    try {
+      const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise(); // Convert Observable to Promise
+      const bookingDates = new Set(bookings.map((booking: { date: string; }) => booking.date.split('T')[0])); // Assume each booking has a 'date' property and extract the date part
+  
+      while (date.getMonth() === month) {
+        const dateString = date.toISOString().split('T')[0];
+        const isSelectable = date >= today && !bookingDates.has(dateString); // Check if the date is today or in the future and not booked
+        this.daysInMonth.push({ date: date.getDate(), isSelectable });
+        date.setDate(date.getDate() + 1);
+      }
+    } catch (error) {
+      console.error('Error fetching bookings for month:', error);
     }
   }
   

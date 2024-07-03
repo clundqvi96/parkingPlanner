@@ -130,6 +130,12 @@
     color: #fff;
 }
 
+.day-container.not-selectable {
+    background-color: #000000; /* Grå färg för icke-valbara dagar */
+    color: #cccccc; /* Ljusgrå textfärg för att indikera att dagen inte är valbar */
+    cursor: not-allowed; /* Ändrar muspekaren för att visa att dagen inte är valbar */
+}
+
 
 
 .day-number {
