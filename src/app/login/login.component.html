@@ -3,11 +3,11 @@
  <div class="login-container">
     <div class="input-wrapper">
       <i class="fas fa-envelope input-icon"></i>
-      <input type="email" class="input-field" placeholder="E-post">
+      <input type="email" class="input-field" placeholder="E-post" [(ngModel)]="email" name="email">
     </div>
     <div class="input-wrapper">
       <i class="fas fa-lock input-icon"></i>
-      <input type="password" class="input-field" placeholder="Lösenord">
+      <input type="password" class="input-field" placeholder="Lösenord" [(ngModel)]="password" name="password">
     </div>
     <button (click)="login()" class="login-btn">Logga in</button>
     <div class="forgot-password">Glömt lösenord?</div>
