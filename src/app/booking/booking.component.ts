@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { response } from 'express';
 
 @Component({
   selector: 'app-booking',
@@ -18,6 +19,13 @@ export class BookingComponent implements OnInit {
   ngOnInit(): void {
     this.generateDaysInMonth();
     this.getMonth();
+    this.getLocalStorageData();
+  }
+
+  //Create a method that gets the local storage data and returns it to the console
+  getLocalStorageData() {
+    const token = localStorage.getItem('token');
+    console.log('Välkommen:', token);
   }
 
  

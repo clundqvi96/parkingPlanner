@@ -18,10 +18,9 @@ export class LoginComponent {
     this.authService.login({ email: this.email, password: this.password }).subscribe({
       next: (response) => {
         // set the session data here
-        localStorage.setItem('token', response.token);
+        localStorage.setItem('token', response.employee.name);
 
-        console.log('Login successful:', response);
-
+        console.log('Login successful:', response.employee.name);
 
         // redirect to the booking page
         this.router.navigate(['booking']);
