@@ -116,53 +116,37 @@
 
 :root {
     --available-color: #fff;
-    --unavailable-color: #000;
+    --unavailable-color: #000; /* Svart */
     --selected-color: #ff6b6b;
-}
-
-.day-number:hover {
-    background-color: #ff6b6b;
-    color: #fff;
-}
-
-.selected-day .day-number {
-    background-color: #ff6b6b;
-    color: #fff;
+    --selectable-background-color: #cccccc; /* Grå */
 }
 
 .day-container.not-selectable {
-    background-color: #000000; /* Grå färg för icke-valbara dagar */
-    color: #cccccc; /* Ljusgrå textfärg för att indikera att dagen inte är valbar */
-    cursor: not-allowed; /* Ändrar muspekaren för att visa att dagen inte är valbar */
+    background-color: var(--unavailable-color); /* Svart bakgrund för icke-valbara dagar */
+    color: #cccccc; /* Ljusgrå textfärg */
+    cursor: not-allowed; /* Indikerar att dagen inte är valbar */
+}
+
+/* Lägg till en ny klass för selectable dagar */
+.day-container.selectable {
+    cursor: pointer; /* Indikerar att dagen är valbar */
+    background-color: #cccccc; /* Grå bakgrund */
+    color: black /* Svart text */
 }
 
 
-
 .day-number {
-    cursor: pointer;
+    cursor: inherit; /* Överför inte muspekaren från föräldern */
     width: 30px;
     height: 30px;
     border-radius: 50%;
     display: inline-block;
     text-align: center;
     line-height: 30px; /* Center the text vertically */
-    background-color: var(--available-color, #ffffff);
-    color: #000;
+    /*background-color: var(--available-color, #ffffff);*/
+    color: #e4dede;
     
   }
-
-
-.legend .available {
-    background-color: #fff;
-}
-
-.legend .unavailable {
-    background-color: #000;
-}
-
-.legend .selected {
-    background-color: #ff6b6b;
-}
 
 .calendar {
     margin: 20px 0;
