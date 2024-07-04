@@ -114,24 +114,24 @@
     margin: 0 5px;
 }
 
-:root {
-    --available-color: #fff;
-    --unavailable-color: #000; /* Svart */
-    --selected-color: #ff6b6b;
-    --selectable-background-color: #cccccc; /* Grå */
-}
+
 
 .day-container.not-selectable {
+    
     background-color: var(--unavailable-color); /* Svart bakgrund för icke-valbara dagar */
-    color: #cccccc; /* Ljusgrå textfärg */
+    color: #ffffff; /* Ljusgrå textfärg */
     cursor: not-allowed; /* Indikerar att dagen inte är valbar */
 }
+
 
 /* Lägg till en ny klass för selectable dagar */
 .day-container.selectable {
     cursor: pointer; /* Indikerar att dagen är valbar */
-    background-color: #cccccc; /* Grå bakgrund */
-    color: black /* Svart text */
+    background-color: #6ce286; /* Grå bakgrund */
+    color: black; /* Svart text */
+    /* Gör background rounden så att den blir rund */
+    border-radius: 50%;
+
 }
 
 
@@ -144,7 +144,7 @@
     text-align: center;
     line-height: 30px; /* Center the text vertically */
     /*background-color: var(--available-color, #ffffff);*/
-    color: #e4dede;
+    
     
   }
 
