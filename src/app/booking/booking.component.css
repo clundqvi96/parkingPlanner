@@ -17,7 +17,7 @@
 }
 
 .rounded-rectangle {
-    background-color: rgba(255, 255, 255, 0.69);
+    background-color: rgba(255, 255, 255, 0.4);
     border-radius: 10px;
     padding: 20px;
     margin-bottom: 20px;
@@ -106,6 +106,14 @@
     align-items: center;
 }
 
+.dot.available {
+    height: 10px;
+    width: 10px;
+    background-color: #4CAF50; /* Green */
+    border-radius: 50%;
+    display: inline-block;
+}
+
 .legend .dot {
     height: 12px;
     width: 12px;
@@ -113,8 +121,6 @@
     display: inline-block;
     margin: 0 5px;
 }
-
-
 
 .day-container.not-selectable {
     
@@ -134,7 +140,6 @@
 
 }
 
-
 .day-number {
     cursor: inherit; /* Överför inte muspekaren från föräldern */
     width: 30px;
@@ -144,8 +149,6 @@
     text-align: center;
     line-height: 30px; /* Center the text vertically */
     /*background-color: var(--available-color, #ffffff);*/
-    
-    
   }
 
 .calendar {
@@ -191,6 +194,7 @@
 table {
     width: 100%;
     border-collapse: collapse;
+    
    
 }
 

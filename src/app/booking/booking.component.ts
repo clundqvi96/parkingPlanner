@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-//import { Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { BookingService } from '../services/booking.service';
 import { catchError } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -15,9 +15,10 @@ export class BookingComponent implements OnInit {
   selectedDate: string | null = null;
   isSelectedDateSpecial: boolean = false;
   currentDate: Date = new Date();
+  token = localStorage.getItem('token');
   
 
-  constructor(private bookingService: BookingService) { }
+  constructor(private bookingService: BookingService, private router: Router) { }
 
   ngOnInit(): void {
     this.generateDaysInMonth();
@@ -27,8 +28,8 @@ export class BookingComponent implements OnInit {
 
   //Create a method that gets the local storage data and returns it to the console
   getLocalStorageData() {
-    const token = localStorage.getItem('token');
-    console.log('Välkommen:', token);
+    this.token = localStorage.getItem('token');
+    console.log('Välkommen:', this.token);
   }
 
  
@@ -58,7 +59,21 @@ export class BookingComponent implements OnInit {
   }
 
   selectParking(parking: string): void { // Added explicit return type
+    console.log("Vald parkering:", parking);
     this.selectedParking = parking;
+    
+    if (this.selectedDate !== null) {
+      const bookings = this.bookingService.getBookingsByDate(this.selectedDate);
+      // Log the bookings for the selected date
+      bookings.pipe(
+        catchError(error => {
+          console.error('Error fetching bookings:', error);
+          return of([]);
+        })
+      ).subscribe((data: any[]) => {
+        console.log(`Bokningar för datum ${this.selectedDate}:`, data);
+      });
+    }
   }
 
 
@@ -67,48 +82,58 @@ onSelect(value: string) {
     // Hantera valt värde här (t.ex. uppdatera en modell eller göra en förfrågan)
 }
 
-    logout() {
-    (['/']);
-  }
+  logout() {
+    localStorage.clear(); // Clear user session
+    this.router.navigate(['/']); // Navigate back to the first page
+}
 
    
-  async generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
-    this.daysInMonth = [];
-    let today = new Date();
-    today.setHours(0, 0, 0, 0); // Reset time to the start of the day for comparison
+async generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
+  this.daysInMonth = [];
+  const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`; // Format month string as YYYY-MM
+
+  try {
+    const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise(); // Convert Observable to Promise
+    let bookingCounts: { [key: string]: number } = {};
+    if (bookings.length > 0) {
+      // Create an object to count bookings per date only if there are bookings
+      bookingCounts = bookings.reduce((acc: { [x: string]: number; }, { date }: any) => {
+        // Assuming date is in local time and formatted as 'YYYY-MM-DD'
+        const dateString = date.split('T')[0];
+        acc[dateString] = (acc[dateString] || 0) + 1;
+        return acc;
+      }, {});
+    }
+
     let date = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0); // Last day of the month
-    const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`; // Format month string as YYYY-MM
-  
-    try {
-      const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise(); // Convert Observable to Promise
-      const bookingDates = new Set(bookings.map((booking: { date: string; }) => booking.date.split('T')[0])); // Assume each booking has a 'date' property and extract the date part
-  
-      while (date.getMonth() === month) {
-        const dateString = date.toISOString().split('T')[0];
-        const isSelectable = date >= today && !bookingDates.has(dateString); // Check if the date is today or in the future and not booked
-        this.daysInMonth.push({ date: date.getDate(), isSelectable });
-        date.setDate(date.getDate() + 1);
-      }
-    } catch (error) {
-      console.error('Error fetching bookings for month:', error);
+
+    while (date <= endDate) {
+      // Manually construct the date string to ensure it represents local time
+      const dateString = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+      // A date is selectable if it has less than 4 bookings or if there are no bookings at all
+      const isSelectable = (bookingCounts[dateString] || 0) < 4;
+      this.daysInMonth.push({ date: date.getDate(), isSelectable });
+      date.setDate(date.getDate() + 1);
     }
+  } catch (error) {
+    console.error('Error fetching bookings for month:', error);
   }
-  
-  getMonth(): string {
-    return this.currentDate.toLocaleString('sv-SE', { month: 'long' });
-  }
+}
 
-  goToNextMonth(): void {
-    this.currentDate.setMonth(this.currentDate.getMonth() + 1);
-    this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
-  }
+goToNextMonth(): void {
+  this.currentDate.setMonth(this.currentDate.getMonth() + 1);
+  this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+}
 
-  goToPreviousMonth(): void {
-    this.currentDate.setMonth(this.currentDate.getMonth() - 1);
-    this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
-  }
+goToPreviousMonth(): void {
+  this.currentDate.setMonth(this.currentDate.getMonth() - 1);
+  this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+}
 
+getMonth(): string {
+  return this.currentDate.toLocaleString('sv-SE', { month: 'long' });
+}
   bookParking(): void {
     // Find the selected day object
     let selectedDay = this.daysInMonth.find(day => day.date === Number(this.selectedDate));
