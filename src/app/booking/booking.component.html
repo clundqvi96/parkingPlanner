@@ -58,31 +58,12 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>01</td>
-                        <td>Jane Doe</td>
-                        <td>61</td>
-                        <td>2024-06-01</td>
+                    <tr *ngFor="let booking of bookings; let i = index">
+                        <td>{{ i + 1 }}</td>
+                        <td>{{ booking.employee.name }}</td>
+                        <td>{{ booking.parking.parkingNumber }}</td>
+                        <td>{{ booking.date | date: 'yyyy-MM-dd' }}</td>
                     </tr>
-                    <tr>
-                        <td>01</td>
-                        <td>Jane Doe</td>
-                        <td>61</td>
-                        <td>2024-06-01</td>
-                    </tr>
-                    <tr>
-                        <td>01</td>
-                        <td>Jane Doe</td>
-                        <td>61</td>
-                        <td>2024-06-01</td>
-                    </tr>
-                    <tr>
-                        <td>01</td>
-                        <td>Jane Doe</td>
-                        <td>61</td>
-                        <td>2024-06-01</td>
-                    </tr>
-                    <!-- More rows as needed -->
                 </tbody>
             </table>
         </div>

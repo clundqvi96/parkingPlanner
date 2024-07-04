@@ -16,17 +16,41 @@ export class BookingComponent implements OnInit {
   isSelectedDateSpecial: boolean = false;
   currentDate: Date = new Date();
   token = localStorage.getItem('token');
-  
-
+  bookings: any[] = [];
+  formattedMonth: string = '';
+ 
   constructor(private bookingService: BookingService, private router: Router) { }
 
   ngOnInit(): void {
-    this.generateDaysInMonth();
+    this.updateFormattedMonth();
     this.getMonth();
     this.getLocalStorageData();
+    this.loadBookingsForMonth(this.formattedMonth); 
+    this.generateDaysInMonth();
+  }
+  updateFormattedMonth(): void {
+    const year = this.currentDate.getFullYear();
+    const month = this.currentDate.getMonth() + 1; 
+    this.formattedMonth = `${year}-${month < 10 ? '0' + month : month}`;
   }
 
-  //Create a method that gets the local storage data and returns it to the console
+  loadBookingsForMonth(month: string) {
+    this.bookings = [];
+
+    this.bookingService.getBookingsByMonth(month).subscribe({
+      next: (data) => {
+        // Kontrollera om data är tom och hantera det genom att sätta bookings till en tom array
+        if (data && data.length > 0) {
+          this.bookings = data;
+        } else {
+          this.bookings = [];
+          console.log('Inga bokningar hittades för den här månaden.');
+        }
+      },
+      error: (error) => console.error('Det gick inte att hämta bokningar', error),
+    });
+  }
+
   getLocalStorageData() {
     this.token = localStorage.getItem('token');
     console.log('Välkommen:', this.token);
@@ -36,7 +60,7 @@ export class BookingComponent implements OnInit {
   selectDay(day: number) {
     this.currentDate.setDate(day);
     const year = this.currentDate.getFullYear();
-    // Ensuring month and day are two digits
+    
     const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
     const date = this.currentDate.getDate().toString().padStart(2, '0');
     this.selectedDate = `${year}-${month}-${date}`;
@@ -49,7 +73,7 @@ export class BookingComponent implements OnInit {
     }
     const year = this.currentDate.getFullYear();
     const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
-    // Ensure the day is two digits for comparison
+   
     const date = day.toString().padStart(2, '0');
     const formattedDate = `${year}-${month}-${date}`;
     if (typeof this.selectedDate === 'string') {
@@ -58,13 +82,13 @@ export class BookingComponent implements OnInit {
     return false;
   }
 
-  selectParking(parking: string): void { // Added explicit return type
+  selectParking(parking: string): void { 
     console.log("Vald parkering:", parking);
     this.selectedParking = parking;
     
     if (this.selectedDate !== null) {
       const bookings = this.bookingService.getBookingsByDate(this.selectedDate);
-      // Log the bookings for the selected date
+      
       bookings.pipe(
         catchError(error => {
           console.error('Error fetching bookings:', error);
@@ -76,80 +100,75 @@ export class BookingComponent implements OnInit {
     }
   }
 
-
 onSelect(value: string) {
     console.log("Valt parkeringsnummer:", value);
-    // Hantera valt värde här (t.ex. uppdatera en modell eller göra en förfrågan)
+    
 }
-
   logout() {
-    localStorage.clear(); // Clear user session
-    this.router.navigate(['/']); // Navigate back to the first page
+    localStorage.clear(); 
+    this.router.navigate(['/']); 
 }
 
-   
 async generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
   this.daysInMonth = [];
-  const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`; // Format month string as YYYY-MM
+  const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`;
+
+  // Generera alla dagar i månaden som standardinställning
+  let date = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0);
+  while (date <= endDate) {
+    this.daysInMonth.push({ date: date.getDate(), isSelectable: true }); // Standardinställ alla dagar till valbara
+    date.setDate(date.getDate() + 1);
+  }
 
   try {
-    const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise(); // Convert Observable to Promise
-    let bookingCounts: { [key: string]: number } = {};
-    if (bookings.length > 0) {
-      // Create an object to count bookings per date only if there are bookings
+    const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise();
+    if (bookings && bookings.length > 0) {
+      let bookingCounts: { [key: string]: number } = {};
+
+      // Skapa en reducer som räknar bokningar per dag
       bookingCounts = bookings.reduce((acc: { [x: string]: number; }, { date }: any) => {
-        // Assuming date is in local time and formatted as 'YYYY-MM-DD'
         const dateString = date.split('T')[0];
         acc[dateString] = (acc[dateString] || 0) + 1;
         return acc;
       }, {});
-    }
 
-    let date = new Date(year, month, 1);
-    const endDate = new Date(year, month + 1, 0); // Last day of the month
-
-    while (date <= endDate) {
-      // Manually construct the date string to ensure it represents local time
-      const dateString = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
-      // A date is selectable if it has less than 4 bookings or if there are no bookings at all
-      const isSelectable = (bookingCounts[dateString] || 0) < 4;
-      this.daysInMonth.push({ date: date.getDate(), isSelectable });
-      date.setDate(date.getDate() + 1);
+      // Uppdatera isSelectable baserat på bokningar
+      this.daysInMonth = this.daysInMonth.map(day => {
+        const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.date.toString().padStart(2, '0')}`;
+        const isSelectable = !(dateString in bookingCounts) || bookingCounts[dateString] < 4;
+        return { ...day, isSelectable };
+      });
     }
   } catch (error) {
     console.error('Error fetching bookings for month:', error);
   }
 }
-
 goToNextMonth(): void {
   this.currentDate.setMonth(this.currentDate.getMonth() + 1);
   this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+  this.updateFormattedMonth();
+  this.loadBookingsForMonth(this.formattedMonth);
 }
-
 goToPreviousMonth(): void {
   this.currentDate.setMonth(this.currentDate.getMonth() - 1);
   this.generateDaysInMonth(this.currentDate.getFullYear(), this.currentDate.getMonth());
+  this.updateFormattedMonth();
+  this.loadBookingsForMonth(this.formattedMonth);
 }
-
 getMonth(): string {
   return this.currentDate.toLocaleString('sv-SE', { month: 'long' });
 }
   bookParking(): void {
-    // Find the selected day object
     let selectedDay = this.daysInMonth.find(day => day.date === Number(this.selectedDate));
   
-    // Validate both parking and date selection, and ensure the date is selectable
     if (!this.selectedParking || !this.selectedDate || (selectedDay && !selectedDay.isSelectable)) {
       alert('Vänligen välj både en parkering och ett giltigt datum.');
       return;
     }
-  
-    // Confirm booking with the user
     const confirmationMessage = `Bekräfta din bokning:\nParkering: ${this.selectedParking}\nDatum: ${this.selectedDate}`;
     const isConfirmed = window.confirm(confirmationMessage);
-  
     if (isConfirmed) {
-      // Placeholder for booking logic - assuming a simple console log for demonstration
       console.log(`Bokningen genomförd för parkering ${this.selectedParking} på datum ${this.selectedDate}.`);
       alert('Din bokning är genomförd!');
     }
