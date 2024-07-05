@@ -12,15 +12,9 @@
     
     <div class="container">
         <div class="header">
-            <div class="parking-selection">
-                <label for="parking">Välj parkering:</label>
-                <div class="buttons-row">
-                  <button class="btn" [class.active]="selectedParking === '61'" (click)="selectParking('61')">61</button>
-                  <button class="btn" [class.active]="selectedParking === '101'" (click)="selectParking('101')">101</button>
-                  <button class="btn" [class.active]="selectedParking === '105'" (click)="selectParking('105')">105</button>
-                  <button class="btn" [class.active]="selectedParking === '102'" (click)="selectParking('102')">102</button>
-                </div>
-              </div>
+            <button *ngFor="let parking of parkings" class="parking-button" [disabled]="parking.isDisabled" (click)="selectParking(parking)">
+                {{parking.parkingNumber}}
+            </button>
             <div class="legend">
                 <span class="dot available"></span> Lediga
             </div>

@@ -18,6 +18,16 @@ export class BookingComponent implements OnInit {
   token = localStorage.getItem('token');
   bookings: any[] = [];
   formattedMonth: string = '';
+  bookedParkings: string[] = [];
+ parkings: any[] = [
+  { parkingNumber: '61', isDisabled: false },
+  { parkingNumber: '101', isDisabled: false },
+  { parkingNumber: '105', isDisabled: false },
+  { parkingNumber: '102', isDisabled: false },
+];
+  availableParkings: string[] = [];
+  isButtonDisabled: boolean = true;
+  
  
   constructor(private bookingService: BookingService, private router: Router) { }
 
@@ -27,6 +37,7 @@ export class BookingComponent implements OnInit {
     this.getLocalStorageData();
     this.loadBookingsForMonth(this.formattedMonth); 
     this.generateDaysInMonth();
+    
   }
   updateFormattedMonth(): void {
     const year = this.currentDate.getFullYear();
@@ -57,20 +68,52 @@ export class BookingComponent implements OnInit {
   }
 
  
-  selectDay(day: number) {
-    this.currentDate.setDate(day);
-    const year = this.currentDate.getFullYear();
-    
-    const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
-    const date = this.currentDate.getDate().toString().padStart(2, '0');
-    this.selectedDate = `${year}-${month}-${date}`;
-    console.log("Valt datum:", this.selectedDate), this.selectParking(this.selectedParking);
-  }
+selectDay(day: number) {
+  this.currentDate.setDate(day);
+  const year = this.currentDate.getFullYear();
+  const month = this.currentDate.getMonth(); // Använd getMonth direkt för jämförelse
+  const date = this.currentDate.getDate();
+  this.selectedDate = `${year}-${month + 1}-${date}`;
 
+  const filteredBookings = this.bookings.filter(booking => {
+    const bookingDate = new Date(booking.date);
+    return bookingDate.getFullYear() === year &&
+           bookingDate.getMonth() === month &&
+           bookingDate.getDate() === date;
+  });
+
+  this.updateParkingAvailability(this.selectedDate);
+}
+
+updateParkingAvailability(selectedDate: string) {
+  // Använd `this.selectedDate` direkt för att filtrera bokningar
+  const [year, month, day] = selectedDate.split('-').map(Number);
+  const bookingsForSelectedDay = this.bookings.filter(booking => {
+    const bookingDate = new Date(booking.date);
+    return bookingDate.getFullYear() === year &&
+           bookingDate.getMonth() === month - 1 && // Månader är 0-indexerade i JavaScript Date
+           bookingDate.getDate() === day;
+  });
+
+  // Hämta upptagna parkeringsnummer som strängar för den valda dagen
+  const occupiedParkingNumbers = this.getParkingNumbers(bookingsForSelectedDay);
+
+  // Uppdatera `isDisabled` för varje parkeringsplats baserat på om dess nummer finns i `occupiedParkingNumbers`
+  this.parkings.forEach(parking => {
+    parking.isDisabled = occupiedParkingNumbers.includes(parking.parkingNumber.toString());
+  });
+
+  console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
+}
+
+ getParkingNumbers(bookings: any[]): number[] {
+  return bookings.map(booking => booking.parking.parkingNumber.toString());
+}
   isSelectedDate(day: number): boolean {
     if (this.selectedDate === null) {
       return false;
     }
+
     const year = this.currentDate.getFullYear();
     const month = (this.currentDate.getMonth() + 1).toString().padStart(2, '0');
    
@@ -83,22 +126,10 @@ export class BookingComponent implements OnInit {
   }
 
   selectParking(parking: string): void { 
-    console.log("Vald parkering:", parking);
     this.selectedParking = parking;
-    
-    if (this.selectedDate !== null) {
-      const bookings = this.bookingService.getBookingsByDate(this.selectedDate);
-      
-      bookings.pipe(
-        catchError(error => {
-          console.error('Error fetching bookings:', error);
-          return of([]);
-        })
-      ).subscribe((data: any[]) => {
-        console.log(`Bokningar för datum ${this.selectedDate}:`, data);
-      });
-    }
+    console.log("Vald parkering:", this.selectedParking);
   }
+
 
 onSelect(value: string) {
     console.log("Valt parkeringsnummer:", value);

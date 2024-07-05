@@ -222,6 +222,11 @@ td {
     width: 100%;
 }
 
+.disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
 /* Media query för skärmar mindre än 1200px */
 @media (max-width: 1200px) {
     .container, .rounded-rectangle {
