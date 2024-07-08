@@ -22,5 +22,10 @@ export class BookingService {
     return this.http.get(`${this.baseUrl}/month/${month}`);
   }
 
+  // Add a method to create a booking
+createBooking(bookingData: { parkingNumber: string; date: string; name: string }): Observable<any> {
+  return this.http.post(`${this.baseUrl}`, bookingData);
+}
+
   // Lägg till fler metoder för att hantera andra endpoints, som att skapa en bokning, uppdatera, etc.
 }

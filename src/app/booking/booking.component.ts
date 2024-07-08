@@ -183,17 +183,32 @@ export class BookingComponent implements OnInit {
 
   bookParking(): void {
     const selectedDay = this.daysInMonth.find(day => day.date === Number(this.selectedDate));
-
+  
     if (!this.selectedParkingNumber || !this.selectedDate || (selectedDay && !selectedDay.isSelectable)) {
       alert('Vänligen välj både en parkering och ett giltigt datum.');
       return;
     }
-
-    const confirmationMessage = `Bekräfta din bokning:\nParkering: ${this.selectedParkingNumber}\nDatum: ${this.selectedDate}`;
+  
+    const bookingData = {
+      parkingNumber: this.selectedParkingNumber,
+      date: this.selectedDate,
+      name: this.token || ''
+    };
+  
+    const confirmationMessage = `Bekräfta din bokning:\nNamn: ${bookingData.name}\nParkering: ${bookingData.parkingNumber}\nDatum: ${bookingData.date}`;
     const isConfirmed = window.confirm(confirmationMessage);
+  
     if (isConfirmed) {
-      console.log(`Bokningen genomförd för parkering ${this.selectedParkingNumber} på datum ${this.selectedDate}.`);
-      alert('Din bokning är genomförd!');
+      this.bookingService.createBooking(bookingData).subscribe({
+        next: (response) => {
+          console.log(`Bokningen genomförd för parkering ${this.selectedParkingNumber} på datum ${this.selectedDate}.`, response);
+          alert('Din bokning är genomförd!');
+        },
+        error: (error) => {
+          console.error('Det gick inte att genomföra bokningen', error);
+          alert('Ett fel uppstod. Din bokning kunde inte genomföras.');
+        }
+      });
     }
   }
 }
