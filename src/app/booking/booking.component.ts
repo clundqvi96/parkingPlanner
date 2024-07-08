@@ -27,6 +27,7 @@ export class BookingComponent implements OnInit {
 ];
   availableParkings: string[] = [];
   isButtonDisabled: boolean = true;
+  selectedParkingNumber: string = '';
   
  
   constructor(private bookingService: BookingService, private router: Router) { }
@@ -71,42 +72,46 @@ export class BookingComponent implements OnInit {
 selectDay(day: number) {
   this.currentDate.setDate(day);
   const year = this.currentDate.getFullYear();
-  const month = this.currentDate.getMonth(); // Använd getMonth direkt för jämförelse
+  const month = this.currentDate.getMonth();
   const date = this.currentDate.getDate();
   this.selectedDate = `${year}-${month + 1}-${date}`;
+  console.log("Valt datum:", this.selectedDate);
 
   const filteredBookings = this.bookings.filter(booking => {
+    
     const bookingDate = new Date(booking.date);
-    return bookingDate.getFullYear() === year &&
-           bookingDate.getMonth() === month &&
-           bookingDate.getDate() === date;
+    const bookingYear = bookingDate.getFullYear();
+    const bookingMonth = bookingDate.getMonth();
+    const bookingDay = bookingDate.getDate();
+    return bookingYear === year && bookingMonth === month && bookingDay === date;
   });
+  console.log("Bokningar för vald dag:", filteredBookings);
 
   this.updateParkingAvailability(this.selectedDate);
 }
 
 updateParkingAvailability(selectedDate: string) {
-  // Använd `this.selectedDate` direkt för att filtrera bokningar
+  console.log("Valt datum i updateParkingAvailability:", selectedDate); 
   const [year, month, day] = selectedDate.split('-').map(Number);
+  const targetDate = new Date(year, month - 1, day).setHours(0, 0, 0, 0);
+  console.log("Target date:", targetDate);
+
   const bookingsForSelectedDay = this.bookings.filter(booking => {
-    const bookingDate = new Date(booking.date);
-    return bookingDate.getFullYear() === year &&
-           bookingDate.getMonth() === month - 1 && // Månader är 0-indexerade i JavaScript Date
-           bookingDate.getDate() === day;
+    const bookingDate = new Date(booking.date).setHours(0, 0, 0, 0);
+    return bookingDate === targetDate;
   });
+  console.log("Bokningar för vald dag:", bookingsForSelectedDay);
 
-  // Hämta upptagna parkeringsnummer som strängar för den valda dagen
   const occupiedParkingNumbers = this.getParkingNumbers(bookingsForSelectedDay);
+  console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
 
-  // Uppdatera `isDisabled` för varje parkeringsplats baserat på om dess nummer finns i `occupiedParkingNumbers`
   this.parkings.forEach(parking => {
     parking.isDisabled = occupiedParkingNumbers.includes(parking.parkingNumber.toString());
   });
 
-  console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
 }
 
- getParkingNumbers(bookings: any[]): number[] {
+getParkingNumbers(bookings: any[]): number[] {
   return bookings.map(booking => booking.parking.parkingNumber.toString());
 }
   isSelectedDate(day: number): boolean {
@@ -125,9 +130,17 @@ updateParkingAvailability(selectedDate: string) {
     return false;
   }
 
-  selectParking(parking: string): void { 
-    this.selectedParking = parking;
+  selectParking(parkingNumber: string): void { 
     console.log("Vald parkering:", this.selectedParking);
+    if (this.selectedParkingNumber === parkingNumber) {
+      this.selectedParkingNumber = '';
+    } else {
+      this.selectedParkingNumber = parkingNumber;
+      console.log("Vald parkering:", parkingNumber);
+    }
+  }
+  isSelectedParking(parkingNumber: string): boolean {
+    return this.selectedParkingNumber === parkingNumber;
   }
 
 
@@ -144,11 +157,11 @@ async generateDaysInMonth(year: number = new Date().getFullYear(), month: number
   this.daysInMonth = [];
   const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`;
 
-  // Generera alla dagar i månaden som standardinställning
+  
   let date = new Date(year, month, 1);
   const endDate = new Date(year, month + 1, 0);
   while (date <= endDate) {
-    this.daysInMonth.push({ date: date.getDate(), isSelectable: true }); // Standardinställ alla dagar till valbara
+    this.daysInMonth.push({ date: date.getDate(), isSelectable: true });
     date.setDate(date.getDate() + 1);
   }
 
@@ -157,14 +170,12 @@ async generateDaysInMonth(year: number = new Date().getFullYear(), month: number
     if (bookings && bookings.length > 0) {
       let bookingCounts: { [key: string]: number } = {};
 
-      // Skapa en reducer som räknar bokningar per dag
       bookingCounts = bookings.reduce((acc: { [x: string]: number; }, { date }: any) => {
         const dateString = date.split('T')[0];
         acc[dateString] = (acc[dateString] || 0) + 1;
         return acc;
       }, {});
 
-      // Uppdatera isSelectable baserat på bokningar
       this.daysInMonth = this.daysInMonth.map(day => {
         const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.date.toString().padStart(2, '0')}`;
         const isSelectable = !(dateString in bookingCounts) || bookingCounts[dateString] < 4;

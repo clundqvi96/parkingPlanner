@@ -11,14 +11,6 @@
         </div>
     
     <div class="container">
-        <div class="header">
-            <button *ngFor="let parking of parkings" class="parking-button" [disabled]="parking.isDisabled" (click)="selectParking(parking)">
-                {{parking.parkingNumber}}
-            </button>
-            <div class="legend">
-                <span class="dot available"></span> Lediga
-            </div>
-        </div>
         <div class="calendar">
             <div class="month">
                 <span class="arrow" (click)="goToPreviousMonth()">&lt;</span>
@@ -35,12 +27,22 @@
                 <div class="day-label">S</div>
                 <!-- Calendar dates go here -->
                 <div class="day-container" *ngFor="let day of daysInMonth; let i = index" 
-     (click)="day.isSelectable ? selectDay(day.date) : null" 
-     [ngClass]="{'selected-day': isSelectedDate(day.date), 'not-selectable': !day.isSelectable, 'selectable': day.isSelectable}">
-  <label for="day-{{i}}" class="day-number">{{ day.date }}</label>
-</div>
-</div>
+                (click)="day.isSelectable ? selectDay(day.date) : null" 
+                [ngClass]="{'selected-day': isSelectedDate(day.date), 'not-selectable': !day.isSelectable, 'selectable': day.isSelectable}">
+                <label for="day-{{i}}" class="day-number">{{ day.date }}</label>
+            </div>
         </div>
+    </div>
+    <div class="header">
+        <button *ngFor="let parking of parkings" [disabled]="parking.isDisabled" 
+        (click)="selectParking(parking.parkingNumber)" class="selected" 
+        [ngClass]="{ 'active': isSelectedParking(parking.parkingNumber)}">
+            {{parking.parkingNumber}}
+        </button>
+        <div class="legend">
+            <span class="dot available"></span> Lediga
+        </div>
+    </div>
         <div class="employee-list">
             <table>
                 <thead>

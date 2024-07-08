@@ -140,6 +140,11 @@
 
 }
 
+.selected.active {
+    background-color: #4CAF50; /* Grön bakgrund för vald parkeringsplats */
+    color: white; /* Vit textfärg */
+  }
+
 .day-number {
     cursor: inherit; /* Överför inte muspekaren från föräldern */
     width: 30px;
