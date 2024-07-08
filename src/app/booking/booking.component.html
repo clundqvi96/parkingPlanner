@@ -34,7 +34,7 @@
         </div>
     </div>
     <div class="header">
-        <button *ngFor="let parking of parkings" [disabled]="parking.isDisabled" 
+        <button *ngFor="let parking of parkings" [class.button-disabled]="parking.isDisabled" 
         (click)="selectParking(parking.parkingNumber)" class="selected" 
         [ngClass]="{ 'active': isSelectedParking(parking.parkingNumber)}">
             {{parking.parkingNumber}}

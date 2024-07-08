@@ -140,11 +140,6 @@
 
 }
 
-.selected.active {
-    background-color: #4CAF50; /* Grön bakgrund för vald parkeringsplats */
-    color: white; /* Vit textfärg */
-  }
-
 .day-number {
     cursor: inherit; /* Överför inte muspekaren från föräldern */
     width: 30px;
@@ -226,6 +221,24 @@ td {
     font-size: 18px;
     width: 100%;
 }
+
+.selected.active {
+    background-color: #4CAF50; /* Grön bakgrund för vald parkeringsplats */
+    color: white; /* Vit textfärg */
+  }
+
+  .selected.active.disabled, .selected.active.button-disabled {
+    background-color: #cccccc; /* Grå färg för disabled */
+    color: #666666; /* Mörkare grå textfärg */
+}
+
+.button-disabled {
+    background-color: #cccccc; /* Grå färg */
+    color: #666666; /* Mörkare grå textfärg */
+    /* Andra stilar som behövs för disabled utseende */
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 
 .disabled {
     pointer-events: none;
