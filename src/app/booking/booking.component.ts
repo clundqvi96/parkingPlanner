@@ -36,6 +36,12 @@ export class BookingComponent implements OnInit {
     this.generateDaysInMonth();
   }
 
+  getLocalStorageData() {
+    this.token = localStorage.getItem('token');
+    console.log('Välkommen:', this.token);
+  }
+
+
   updateFormattedMonth(): void {
     const year = this.currentDate.getFullYear();
     const month = this.currentDate.getMonth() + 1;
@@ -53,10 +59,19 @@ export class BookingComponent implements OnInit {
       error: (error) => console.error('Det gick inte att hämta bokningar', error),
     });
   }
-
-  getLocalStorageData() {
-    this.token = localStorage.getItem('token');
-    console.log('Välkommen:', this.token);
+  loadBookingsForDate(date: string) {
+    this.bookingService.getBookingsByDate(date).subscribe({
+      next: (data) => {
+        // Använd samma logik som ovan för att hantera olika scenarion
+        if (data.length === 0 || (data.length === 1 && typeof data[0] === 'string')) {
+          console.log('Inga bokningar hittades för det här datumet.');
+          this.bookings = [];
+        } else {
+          this.bookings = data;
+        }
+      },
+      error: (error) => console.error('Det gick inte att hämta bokningar', error),
+    });
   }
 
   selectDay(day: number) {
@@ -66,40 +81,46 @@ export class BookingComponent implements OnInit {
     const date = this.currentDate.getDate();
     this.selectedDate = `${year}-${(month + 1).toString().padStart(2, '0')}-${date.toString().padStart(2, '0')}`;
     console.log("Valt datum:", this.selectedDate);
+    
 
     const filteredBookings = this.bookings.filter(booking => {
       const bookingDate = new Date(booking.date);
       return bookingDate.getFullYear() === year && bookingDate.getMonth() === month && bookingDate.getDate() === date;
     });
     console.log("Bokningar för vald dag:", filteredBookings);
-
+    
     this.updateParkingAvailability(this.selectedDate);
-
+    this.loadBookingsForDate(this.selectedDate);
     
   }
+updateParkingAvailability(selectedDate: string) {
+  console.log("Valt datum i updateParkingAvailability:", selectedDate);
+  const [year, month, day] = selectedDate.split('-').map(Number);
+  const targetDate = new Date(year, month - 1, day).setHours(0, 0, 0, 0);
+  console.log("Target date:", targetDate);
 
-  updateParkingAvailability(selectedDate: string) {
-    console.log("Valt datum i updateParkingAvailability:", selectedDate);
-    const [year, month, day] = selectedDate.split('-').map(Number);
-    const targetDate = new Date(year, month - 1, day).setHours(0, 0, 0, 0);
-    console.log("Target date:", targetDate);
+  // Hämta bokningar direkt för det valda datumet
+  this.bookingService.getBookingsByDate(selectedDate).subscribe({
+    next: (data) => {
+      const bookingsForSelectedDay = data.filter((booking: any) => {
+        const bookingDate = new Date(booking.date).setHours(0, 0, 0, 0);
+        return bookingDate === targetDate;
+      });
+      console.log("Bokningar för vald dag:", bookingsForSelectedDay);
 
-    const bookingsForSelectedDay = this.bookings.filter(booking => {
-      const bookingDate = new Date(booking.date).setHours(0, 0, 0, 0);
-      return bookingDate === targetDate;
-    });
-    console.log("Bokningar för vald dag:", bookingsForSelectedDay);
-
-    const occupiedParkingNumbers = bookingsForSelectedDay.map(booking => booking.parking.parkingNumber.toString());
-    console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
-    if (occupiedParkingNumbers.includes(this.selectedParkingNumber)) {
-      console.log(`Parkering ${this.selectedParkingNumber} är upptagen den ${this.selectedDate}.`);
-      this.isButtonDisabled = true;
-  }
-    this.parkings.forEach(parking => {
-      parking.isDisabled = occupiedParkingNumbers.includes(parking.parkingNumber.toString());
-    });
-  }
+      const occupiedParkingNumbers = bookingsForSelectedDay.map((booking: any) => booking.parking.parkingNumber.toString());
+      console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
+      if (occupiedParkingNumbers.includes(this.selectedParkingNumber)) {
+        console.log(`Parkering ${this.selectedParkingNumber} är upptagen den ${selectedDate}.`);
+        this.isButtonDisabled = true;
+      }
+      this.parkings.forEach(parking => {
+        parking.isDisabled = occupiedParkingNumbers.includes(parking.parkingNumber.toString());
+      });
+    },
+    error: (error) => console.error('Det gick inte att hämta bokningar', error),
+  });
+}
 
   isSelectedDate(day: number): boolean {
     if (this.selectedDate === null) {
