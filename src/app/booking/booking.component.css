@@ -122,22 +122,22 @@
     margin: 0 5px;
 }
 
-.day-container.not-selectable {
+.not-selectable {
     
-    background-color: var(--unavailable-color); /* Svart bakgrund för icke-valbara dagar */
+    background-color:#ff6b6b;/* Svart bakgrund för icke-valbara dagar */
     color: #ffffff; /* Ljusgrå textfärg */
-    cursor: not-allowed; /* Indikerar att dagen inte är valbar */
+    cursor: pointer;
+    border-radius: 50%; /* Gör background rounden så att den blir rund */
 }
 
 
 /* Lägg till en ny klass för selectable dagar */
-.day-container.selectable {
+.selectable {
     cursor: pointer; /* Indikerar att dagen är valbar */
     background-color: #6ce286; /* Grå bakgrund */
     color: black; /* Svart text */
     /* Gör background rounden så att den blir rund */
     border-radius: 50%;
-
 }
 
 .day-number {

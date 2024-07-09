@@ -27,10 +27,12 @@
                 <div class="day-label">S</div>
                 <!-- Calendar dates go here -->
                 <div class="day-container" *ngFor="let day of daysInMonth; let i = index" 
-                (click)="day.isSelectable ? selectDay(day.date) : null" 
-                [ngClass]="{'selected-day': isSelectedDate(day.date), 'not-selectable': !day.isSelectable, 'selectable': day.isSelectable}">
-                <label for="day-{{i}}" class="day-number">{{ day.date }}</label>
-            </div>
+                (click)="day.isBookable ? selectDay(day.date) : null" 
+                [ngClass]="{'selected-day': isSelectedDate(day.date),
+                 'not-selectable': day.isFull,
+                 'selectable': day.isBookable && !day.isFull}">
+                    <label for="day-{{i}}" class="day-number">{{ day.date }}</label>
+                </div>
         </div>
     </div>
     <div class="header">

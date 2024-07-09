@@ -7,8 +7,10 @@ import { BookingService } from '../services/booking.service';
   templateUrl: './booking.component.html',
   styleUrls: ['./booking.component.css']
 })
+
 export class BookingComponent implements OnInit {
-  daysInMonth: { date: number, isSelectable: boolean }[] = [];
+  
+  daysInMonth: { date: number, isBookable: boolean, isFull: boolean}[] = [];
   selectedParkingNumber: string = '';
   selectedDate: string | null = null;
   isSelectedDateSpecial: boolean = false;
@@ -160,29 +162,33 @@ updateParkingAvailability(selectedDate: string) {
     let date = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0);
     while (date <= endDate) {
-      this.daysInMonth.push({ date: date.getDate(), isSelectable: true });
+      this.daysInMonth.push({ date: date.getDate(), isBookable: true, isFull: false});
       date.setDate(date.getDate() + 1);
     }
 
-    try {
-      const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise();
-      if (bookings && bookings.length > 0) {
-        const bookingCounts = bookings.reduce((acc: { [key: string]: number }, { date }: { date: string }) => {
-          const dateString = date.split('T')[0];
-          acc[dateString] = (acc[dateString] || 0) + 1;
-          return acc;
-        }, {});
+  try {
+  const bookings = await this.bookingService.getBookingsByMonth(monthString).toPromise();
+  if (bookings && bookings.length > 0) {
+    const bookingCounts = bookings.reduce((acc: { [key: string]: number }, { date }: { date: string }) => {
+      const dateString = date.split('T')[0];
+      acc[dateString] = (acc[dateString] || 0) + 1;
+      return acc;
+    }, {});
 
-        this.daysInMonth = this.daysInMonth.map(day => {
-          const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.date.toString().padStart(2, '0')}`;
-          const isSelectable = !(dateString in bookingCounts) || bookingCounts[dateString] < 4;
-          return { ...day, isSelectable };
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching bookings for month:', error);
-    }
+    this.daysInMonth = this.daysInMonth.map(day => {
+      const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.date.toString().padStart(2, '0')}`;
+      // Sätt alltid isBookable till true för att göra dagarna klickbara
+      //day.isBookable = true;
+      // Du kan lägga till en ny egenskap här för att indikera om dagen är fullbokad
+      day.isFull = (dateString in bookingCounts) && bookingCounts[dateString] >= 4;
+      
+      return day;
+    });
   }
+} catch (error) {
+  console.error('Error fetching bookings for month:', error);
+}
+}
 
   goToNextMonth(): void {
     this.currentDate.setMonth(this.currentDate.getMonth() + 1);
@@ -205,7 +211,7 @@ updateParkingAvailability(selectedDate: string) {
   bookParking(): void {
     const selectedDay = this.daysInMonth.find(day => day.date === Number(this.selectedDate));
   
-    if (!this.selectedParkingNumber || !this.selectedDate || (selectedDay && !selectedDay.isSelectable)) {
+    if (!this.selectedParkingNumber || !this.selectedDate || (selectedDay && !selectedDay.isBookable)) {
       alert('Vänligen välj både en parkering och ett giltigt datum.');
       return;
     }
