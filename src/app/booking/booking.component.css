@@ -126,7 +126,7 @@
 
 .past-day {
     background-color:#777; /* Grå bakgrund för förflutna dagar */
-    color: #ffffff; /* Mörkare grå textfärg */
+    color: #ffffffa6; /* Mörkare grå textfärg */
     cursor: pointer;
     border-radius: 50%; /* Gör background rounden så att den blir rund */
     pointer-events: none; /* Inaktivera klickhändelser */

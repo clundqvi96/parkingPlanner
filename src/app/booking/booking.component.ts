@@ -64,10 +64,11 @@ export class BookingComponent implements OnInit {
   loadBookingsForDate(date: string) {
     this.bookingService.getBookingsByDate(date).subscribe({
       next: (data) => {
-        // Använd samma logik som ovan för att hantera olika scenarion
-        if (data.length === 0 || (data.length === 1 && typeof data[0] === 'string')) {
-          console.log('Inga bokningar hittades för det här datumet.');
-          this.bookings = [];
+        console.log("innan if satsen");
+        // Kontrollera om svaret innehåller ett meddelande, vilket indikerar inga bokningar
+        if (data.message) {
+          console.log(data.message); // Logga meddelandet från servern
+          this.bookings = data.bookings; // Sätt bookings till den tomma arrayen
         } else {
           this.bookings = data;
         }
@@ -89,40 +90,39 @@ export class BookingComponent implements OnInit {
       const bookingDate = new Date(booking.date);
       return bookingDate.getFullYear() === year && bookingDate.getMonth() === month && bookingDate.getDate() === date;
     });
-    console.log("Bokningar för vald dag:", filteredBookings);
     
     this.updateParkingAvailability(this.selectedDate);
     this.loadBookingsForDate(this.selectedDate);
     
   }
-updateParkingAvailability(selectedDate: string) {
-  console.log("Valt datum i updateParkingAvailability:", selectedDate);
-  const [year, month, day] = selectedDate.split('-').map(Number);
-  const targetDate = new Date(year, month - 1, day).setHours(0, 0, 0, 0);
-  console.log("Target date:", targetDate);
-
-  // Hämta bokningar direkt för det valda datumet
-  this.bookingService.getBookingsByDate(selectedDate).subscribe({
-    next: (data) => {
-      const bookingsForSelectedDay = data.filter((booking: any) => {
-        const bookingDate = new Date(booking.date).setHours(0, 0, 0, 0);
-        return bookingDate === targetDate;
-      });
-      console.log("Bokningar för vald dag:", bookingsForSelectedDay);
-
-      const occupiedParkingNumbers = bookingsForSelectedDay.map((booking: any) => booking.parking.parkingNumber.toString());
-      console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
-      if (occupiedParkingNumbers.includes(this.selectedParkingNumber)) {
-        console.log(`Parkering ${this.selectedParkingNumber} är upptagen den ${selectedDate}.`);
-        this.isButtonDisabled = true;
-      }
-      this.parkings.forEach(parking => {
-        parking.isDisabled = occupiedParkingNumbers.includes(parking.parkingNumber.toString());
-      });
-    },
-    error: (error) => console.error('Det gick inte att hämta bokningar', error),
-  });
-}
+  updateParkingAvailability(selectedDate: string) {
+    console.log("Valt datum i updateParkingAvailability:", selectedDate);
+    const [year, month, day] = selectedDate.split('-').map(Number);
+    const targetDate = new Date(year, month - 1, day).setHours(0, 0, 0, 0);
+  
+    this.bookingService.getBookingsByDate(selectedDate).subscribe({
+      next: (response) => {
+        // Kontrollera om svaret innehåller en bookings-array
+        const bookingsData = response.bookings ? response.bookings : response;
+        const bookingsForSelectedDay = bookingsData.filter((booking: any) => {
+          const bookingDate = new Date(booking.date).setHours(0, 0, 0, 0);
+          return bookingDate === targetDate;
+        });
+        console.log("Bokningar för vald dag:", bookingsForSelectedDay);
+  
+        const occupiedParkingNumbers = bookingsForSelectedDay.map((booking: any) => booking.parking.parkingNumber.toString());
+        console.log("Upptagna parkeringsnummer för vald dag:", occupiedParkingNumbers);
+        if (occupiedParkingNumbers.includes(this.selectedParkingNumber)) {
+          console.log(`Parkering ${this.selectedParkingNumber} är upptagen den ${selectedDate}.`);
+          this.isButtonDisabled = true;
+        }
+        this.parkings.forEach(parking => {
+          parking.isDisabled = occupiedParkingNumbers.includes(parking.parkingNumber.toString());
+        });
+      },
+      error: (error) => console.error('Det gick inte att hämta bokningar', error),
+    });
+  }
 
   isSelectedDate(day: number): boolean {
     if (this.selectedDate === null) {
@@ -164,9 +164,7 @@ updateParkingAvailability(selectedDate: string) {
     let date = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0);
     while (date <= endDate) {
-      // Använd toISOString() för att få fullständigt datumformat och jämför sedan
       const isPast = date < today;
-      // Lägg till fullständigt datumformat för varje dag i arrayen
       this.daysInMonth.push({
         date: date.getDate(),
         isBookable: true,
