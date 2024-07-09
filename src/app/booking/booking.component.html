@@ -29,8 +29,9 @@
                 <div class="day-container" *ngFor="let day of daysInMonth; let i = index" 
                 (click)="day.isBookable ? selectDay(day.date) : null" 
                 [ngClass]="{'selected-day': isSelectedDate(day.date),
-                 'not-selectable': day.isFull,
-                 'selectable': day.isBookable && !day.isFull}">
+                 'not-selectable': day.isFull && !day.isPast,
+                 'selectable': day.isBookable && !day.isFull && !day.isPast,
+                 'past-day': day.isPast || (day.isPast && day.isFull)}">
                     <label for="day-{{i}}" class="day-number">{{ day.date }}</label>
                 </div>
         </div>

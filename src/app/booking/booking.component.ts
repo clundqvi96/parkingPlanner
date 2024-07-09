@@ -10,7 +10,7 @@ import { BookingService } from '../services/booking.service';
 
 export class BookingComponent implements OnInit {
   
-  daysInMonth: { date: number, isBookable: boolean, isFull: boolean}[] = [];
+  daysInMonth: { date: number, isBookable: boolean, isFull: boolean, isPast: boolean}[] = [];
   selectedParkingNumber: string = '';
   selectedDate: string | null = null;
   isSelectedDateSpecial: boolean = false;
@@ -157,12 +157,22 @@ updateParkingAvailability(selectedDate: string) {
 
   async generateDaysInMonth(year: number = new Date().getFullYear(), month: number = new Date().getMonth()) {
     this.daysInMonth = [];
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     const monthString = `${year}-${(month + 1).toString().padStart(2, '0')}`;
 
     let date = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0);
     while (date <= endDate) {
-      this.daysInMonth.push({ date: date.getDate(), isBookable: true, isFull: false});
+      // Använd toISOString() för att få fullständigt datumformat och jämför sedan
+      const isPast = date < today;
+      // Lägg till fullständigt datumformat för varje dag i arrayen
+      this.daysInMonth.push({
+        date: date.getDate(),
+        isBookable: true,
+        isFull: false,
+        isPast: isPast
+      });
       date.setDate(date.getDate() + 1);
     }
 
@@ -177,11 +187,7 @@ updateParkingAvailability(selectedDate: string) {
 
     this.daysInMonth = this.daysInMonth.map(day => {
       const dateString = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.date.toString().padStart(2, '0')}`;
-      // Sätt alltid isBookable till true för att göra dagarna klickbara
-      //day.isBookable = true;
-      // Du kan lägga till en ny egenskap här för att indikera om dagen är fullbokad
       day.isFull = (dateString in bookingCounts) && bookingCounts[dateString] >= 4;
-      
       return day;
     });
   }

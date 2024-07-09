@@ -122,21 +122,29 @@
     margin: 0 5px;
 }
 
-.not-selectable {
-    
-    background-color:#ff6b6b;/* Svart bakgrund för icke-valbara dagar */
-    color: #ffffff; /* Ljusgrå textfärg */
+
+
+.past-day {
+    background-color:#777; /* Grå bakgrund för förflutna dagar */
+    color: #ffffff; /* Mörkare grå textfärg */
     cursor: pointer;
     border-radius: 50%; /* Gör background rounden så att den blir rund */
+    pointer-events: none; /* Inaktivera klickhändelser */
 }
 
+.not-selectable {
+    
+    background-color:#ff6b6b;
+    color: #ffffff; 
+    cursor: pointer;
+    border-radius: 50%; 
+}
 
-/* Lägg till en ny klass för selectable dagar */
 .selectable {
-    cursor: pointer; /* Indikerar att dagen är valbar */
-    background-color: #6ce286; /* Grå bakgrund */
-    color: black; /* Svart text */
-    /* Gör background rounden så att den blir rund */
+    cursor: pointer; 
+    background-color: #6ce286; 
+    color: black; 
+    
     border-radius: 50%;
 }
 
@@ -187,9 +195,12 @@
     color: #fff;
 }   
 
+.book-btn:hover {
+    background-color:#6ce286;
+}
 
 .book-btn {
-    background-color: #ff6b6b;
+    background-color:#4CAF50;
     color: #fff;
     border: none;
     border-radius: 5px;
