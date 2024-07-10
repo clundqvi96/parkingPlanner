@@ -134,6 +134,7 @@
 
 .not-selectable:hover {
     background-color:#ff5757;
+    transition: 0.3s;
 }
 
 .not-selectable {
@@ -154,6 +155,7 @@
 
 .selectable:hover {
     background-color: #4CAF50; /* En mörkare nyans för aktiv/highlight eller hover */
+    transition: 0.3s;
 }
 
 .day-number {
@@ -204,7 +206,8 @@
 }   
 
 .book-btn:hover {
-    background-color:#6ce286;
+    background-color:#1fa724;
+    transition: 0.3s;
 }
 
 .book-btn {
@@ -226,7 +229,20 @@
 .selected.active.disabled, .selected.active.button-disabled {
     background-color: #cccccc; /* Grå färg för disabled */
     color: #666666; /* Mörkare grå textfärg */
+    
+    
 }
+
+.selected {
+    background-color: #007bff; /* Blå bakgrund */
+    color: white; /* Vit text */
+    padding: 10px 20px; /* Inre marginal */
+    border: none; /* Ingen kant */
+    border-radius: 5px; /* Rundade hörn */
+    cursor: pointer; /* Ändra muspekaren till en pekare */
+    margin: 5px; /* Yttre marginal */
+    transition: background-color 0.3s; /* Gör övergången mjuk */
+  }
 
 .button-disabled {
     background-color: #cccccc; /* Grå färg */
@@ -234,6 +250,7 @@
     /* Andra stilar som behövs för disabled utseende */
     cursor: not-allowed;
     pointer-events: none;
+    
 }
 
 .disabled {
