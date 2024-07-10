@@ -132,6 +132,10 @@
     pointer-events: none; /* Inaktivera klickhändelser */
 }
 
+.not-selectable:hover {
+    background-color:#ff5757;
+}
+
 .not-selectable {
     
     background-color:#ff6b6b;
@@ -146,6 +150,10 @@
     color: black; 
     
     border-radius: 50%;
+}
+
+.selectable:hover {
+    background-color: #4CAF50; /* En mörkare nyans för aktiv/highlight eller hover */
 }
 
 .day-number {
@@ -253,6 +261,7 @@ td {
 }
 .fixed-height-table table {
     table-layout: fixed;
+    width: 100%;
 }
 .fixed-height-table th, .fixed-height-table td {
     width: 10%;
