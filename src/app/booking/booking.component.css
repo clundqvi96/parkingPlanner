@@ -147,6 +147,7 @@
     border-radius: 50%; 
 }
 
+
 .selectable {
     cursor: pointer; 
     background-color: #6ce286; 
@@ -170,20 +171,6 @@
     line-height: 30px; /* Center the text vertically */
     /*background-color: var(--available-color, #ffffff);*/
 }
-
-.day-container {
-    opacity: 0; /* Initial state with full transparency */
-    transform: scale(0.5); /* Slightly smaller size for a grow effect */
-    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Smooth transition for opacity and transform */
-}
-
-.day-container.visible {
-    opacity: 1; /* Final state with full opacity */
-    transform: scale(1); /* Return to normal size */
-}
-
-
-
 .calendar {
     margin: 20px 0;
 }
@@ -237,7 +224,7 @@
 }
 
 .selected.active {
-    background-color: #4CAF50; /* Grön bakgrund för vald parkeringsplats */
+    background-color: #1fa724; /* Grön bakgrund för vald parkeringsplats */
     color: white; /* Vit textfärg */
 }
 
@@ -248,8 +235,13 @@
     
 }
 
+.selected:hover {
+    background-color: #1fa724; /* En mörkare nyans för aktiv/highlight eller hover */
+    transition: 0.3s;
+}
+
 .selected {
-    background-color: #28a745; /* Grön bakgrund */
+    background-color: #4CAF50;
     color: white; /* Vit text */
     padding: 10px 20px; /* Inre marginal */
     border: none; /* Ingen kant */
