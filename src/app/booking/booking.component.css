@@ -24,6 +24,7 @@
     font-size: 14px;   
     width: 80%; 
     font-style: bold;
+    max-width: 600px;
 }
 
 .centered-content {
@@ -60,7 +61,8 @@
     border-radius: 10px;
     padding: 20px;
     width: 80%;
-    max-width: 1500px;
+    max-width: 600px;
+    min-height: 800px;
 }
 
 .header {
@@ -145,6 +147,7 @@
     border-radius: 50%; 
 }
 
+
 .selectable {
     cursor: pointer; 
     background-color: #6ce286; 
@@ -167,8 +170,7 @@
     text-align: center;
     line-height: 30px; /* Center the text vertically */
     /*background-color: var(--available-color, #ffffff);*/
-  }
-
+}
 .calendar {
     margin: 20px 0;
 }
@@ -222,7 +224,7 @@
 }
 
 .selected.active {
-    background-color: #4CAF50; /* Grön bakgrund för vald parkeringsplats */
+    background-color: #1fa724; /* Grön bakgrund för vald parkeringsplats */
     color: white; /* Vit textfärg */
 }
 
@@ -233,8 +235,13 @@
     
 }
 
+.selected:hover {
+    background-color: #1fa724; /* En mörkare nyans för aktiv/highlight eller hover */
+    transition: 0.3s;
+}
+
 .selected {
-    background-color: #007bff; /* Blå bakgrund */
+    background-color: #4CAF50;
     color: white; /* Vit text */
     padding: 10px 20px; /* Inre marginal */
     border: none; /* Ingen kant */
