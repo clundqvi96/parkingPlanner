@@ -24,6 +24,7 @@
     font-size: 14px;   
     width: 80%; 
     font-style: bold;
+    max-width: 600px;
 }
 
 .centered-content {
@@ -60,7 +61,8 @@
     border-radius: 10px;
     padding: 20px;
     width: 80%;
-    max-width: 1500px;
+    max-width: 600px;
+    min-height: 800px;
 }
 
 .header {
@@ -167,7 +169,20 @@
     text-align: center;
     line-height: 30px; /* Center the text vertically */
     /*background-color: var(--available-color, #ffffff);*/
-  }
+}
+
+.day-container {
+    opacity: 0; /* Initial state with full transparency */
+    transform: scale(0.5); /* Slightly smaller size for a grow effect */
+    transition: opacity 0.5s ease-out, transform 0.5s ease-out; /* Smooth transition for opacity and transform */
+}
+
+.day-container.visible {
+    opacity: 1; /* Final state with full opacity */
+    transform: scale(1); /* Return to normal size */
+}
+
+
 
 .calendar {
     margin: 20px 0;
@@ -234,7 +249,7 @@
 }
 
 .selected {
-    background-color: #007bff; /* Blå bakgrund */
+    background-color: #28a745; /* Grön bakgrund */
     color: white; /* Vit text */
     padding: 10px 20px; /* Inre marginal */
     border: none; /* Ingen kant */
