@@ -207,12 +207,12 @@
     color: #fff;
 }   
 
-.book-btn:hover {
+.book-btn:hover, .delete-btn:hover{
     background-color:#1fa724;
     transition: 0.3s;
 }
 
-.book-btn {
+.book-btn, .delete-btn {
     background-color:#4CAF50;
     color: #fff;
     border: none;
@@ -221,7 +221,11 @@
     cursor: pointer;
     font-size: 18px;
     width: 100%;
+    margin: 5px;
+       
 }
+
+
 
 .selected.active {
     background-color: #1fa724; /* Grön bakgrund för vald parkeringsplats */
@@ -269,11 +273,29 @@
 }
 
 
+.clickable-row{
+    cursor: pointer;
+}
+
+
+.clickable-row td:after {
+    content: "\2605"; /* Unicode-karaktär för en stjärna */
+    display: inline-block;
+    margin-right: 5px;
+    color: #FFD700; /* Guldig färg för stjärnan */
+}
+.clickable-row td:hover {
+    background-color: #999; /* Mörkare grå bakgrund för hover */
+    transition: 0.3s; /* Gör övergången mjuk */
+}
+.selected-row td {
+    background-color: #999 !important; /* Blå bakgrund för markerade rader */
+  }
 th {
     background-color: #666;
 }
 
-td {
+.fixed-height-table td {
     background-color: #777;
 }
 
@@ -283,14 +305,17 @@ td {
     overflow-y: auto;
     display: block;
 }
+
 .fixed-height-table table {
     table-layout: fixed;
     width: 100%;
 }
+
 .fixed-height-table th, .fixed-height-table td {
     width: 10%;
     padding: 10px;
     text-align: left;
+    
 }
 
 /* Media query för skärmar mindre än 1200px */

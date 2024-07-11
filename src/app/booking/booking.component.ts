@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { BookingService } from '../services/booking.service';
+import e from 'express';
 
 @Component({
   selector: 'app-booking',
@@ -9,10 +10,12 @@ import { BookingService } from '../services/booking.service';
 })
 
 export class BookingComponent implements OnInit {
-  
+  selectedRowIndex: number = -1;
+  showDeleteButton = false;
+  selectedBookingName: string | null = null;
   daysInMonth: { date: number, isBookable: boolean, isFull: boolean, isPast: boolean}[] = [];
   selectedParkingNumber: string = '';
-  selectedDate: string | null = null;
+  selectedDate: string = '';
   isSelectedDateSpecial: boolean = false;
   currentDate: Date = new Date();
   token = localStorage.getItem('token');
@@ -27,6 +30,7 @@ export class BookingComponent implements OnInit {
   ];
   availableParkings: string[] = [];
   isButtonDisabled: boolean = true;
+  selectedBooking: any = null;
 
   constructor(private bookingService: BookingService, private router: Router) { }
 
@@ -242,6 +246,32 @@ export class BookingComponent implements OnInit {
       });
     }
   }
+  confirmDelete() {
+    const isConfirmed = confirm('Är du säker på att du vill ta bort denna bokning?');
+    if (isConfirmed && this.selectedBooking) {
+        // Använd data från den valda bokningen istället
+        console.log('Bokning att ta bort:', this.selectedBooking);
+        this.bookingService.deleteBooking({ parkingNumber: this.selectedBooking.parking.parkingNumber, date: this.selectedDate, name: this.token ?? '' }).subscribe({
+          next: (response) => {
+            console.log('Bokningen har tagits bort:', response);
+            this.loadBookingsForDate(this.selectedBooking.date);
+            // Nollställ den valda bokningen efter borttagning
+            this.selectedBooking = null;
+          },
+          error: (error) => {
+            console.error('Det gick inte att ta bort bokningen:', error);
+          }
+        });
+    }
+  }
 
-  
+selectRow(booking: any, index: number): void {
+  if (booking.employee.name !== this.token) {
+    return;
+  }
+  this.selectedRowIndex = index;
+  this.showDeleteButton = true;
+  // Spara den valda bokningen
+  this.selectedBooking = booking;
+}
 }
