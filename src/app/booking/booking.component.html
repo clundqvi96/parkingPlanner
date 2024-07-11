@@ -57,16 +57,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr *ngFor="let booking of bookings; let i = index">
+                    <tr *ngFor="let booking of bookings; let i = index" 
+                        [ngClass]="{'clickable-row': booking.employee.name === token, 'selected-row': selectedRowIndex === i}" 
+                        (click)="selectRow(booking, i)">
                         <td>{{ i + 1 }}</td>
                         <td>{{ booking.employee.name }}</td>
                         <td>{{ booking.parking.parkingNumber }}</td>
                         <td>{{ booking.date | date: 'yyyy-MM-dd' }}</td>
                     </tr>
-                </tbody>
-            </table>
-        </div>
-        <button class="book-btn" (click)="bookParking()">Boka parkering för den valda dagen</button>
+                    </tbody>
+                    </table>
+                    </div>
+                    <button class="book-btn" (click)="bookParking()">Boka parkering för den valda dagen</button>
+                    <button class="delete-btn" *ngIf="showDeleteButton" (click)="confirmDelete()">Ta bort bokning</button>
     </div>
  </div>
  </div>
