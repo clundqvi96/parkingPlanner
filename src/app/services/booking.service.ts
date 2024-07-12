@@ -24,7 +24,7 @@ export class BookingService {
 
   // Add a method to create a booking
   createBooking(bookingData: { parkingNumber: string; date: string; name: string }): Observable<any> {
-  return this.http.post(`${this.baseUrl}`, bookingData);
+  return this.http.post(`${this.baseUrl}/v2/`, bookingData);
   }
 
   // Add a method to delete a booking the url should be `${this.baseUrl}/<employee.name>/<date>/<parkingNumber>`
