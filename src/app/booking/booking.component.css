@@ -22,7 +22,7 @@
     padding: 20px;
     margin-bottom: 20px;
     font-size: 14px;   
-    width: 80%; 
+    width: 100%; 
     font-style: bold;
     max-width: 600px;
 }
@@ -56,13 +56,39 @@
     margin-right: 5px;
 }
 
+.container-flex {
+    display: flex;
+    
+}
+
 .container {
+    flex: 1;
+}
+
+
+.container-kalender, .container-keys {
     background-color: rgba(85, 85, 85, 0.69);
     border-radius: 10px;
     padding: 20px;
     width: 80%;
     max-width: 600px;
     min-height: 800px;
+    margin: 15px;
+}
+
+.keys-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.keys-table th, .keys-table td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.keys-table tr:nth-child(even) {
+    background-color: #9e9e9e;
 }
 
 .header {
@@ -318,9 +344,12 @@ th {
     
 }
 
+
+
+
 /* Media query för skärmar mindre än 1200px */
 @media (max-width: 1200px) {
-    .container, .rounded-rectangle {
+    .container-kalender, .rounded-rectangle {
         width: 70%; /* Öka bredden för att fylla mer av skärmen */
         padding: 10px; /* Lägg till lite padding för att undvika att innehållet rör vid skärmkanterna */
     }
@@ -348,7 +377,7 @@ th {
 
 /* Media query för skärmar mindre än 768px (typiska telefonstorlekar) */
 @media (max-width: 768px) {
-    .container, .overlay, .rounded-rectangle, .centered-content {
+    .container-kalender, .overlay, .rounded-rectangle, .centered-content {
         width: 100%; /* Använd hela skärmens bredd */
         margin: 0; /* Ta bort marginaler */
         padding: 5px; /* Minska padding */

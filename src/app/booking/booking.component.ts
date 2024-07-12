@@ -10,6 +10,18 @@ import e from 'express';
 })
 
 export class BookingComponent implements OnInit {
+
+  keys = [
+    { name: 'G1', status: true },
+    { name: 'G2', status: false },
+    { name: 'G3', status: true },
+    { name: 'G4', status: true },
+    { name: 'G5', status: false },
+    { name: 'G6', status: true },
+    { name: 'G7', status: false },
+    { name: 'G8', status: true },
+    { name: 'G9', status: false }
+  ];
   selectedRowIndex: number = -1;
   showDeleteButton = false;
   selectedBookingName: string | null = null;

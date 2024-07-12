@@ -10,7 +10,9 @@
         <div class="rounded-rectangle">
             <h1>Hej {{token}}! Välj datum för att boka parkering</h1>
         </div>
-        <div class="container">
+        <div class ="container-flex">
+            
+        <div class="container container-kalender">
         <div class="calendar">
             <div class="month">
                 <span class="arrow" (click)="goToPreviousMonth()">&lt;</span>
@@ -71,5 +73,23 @@
                     <button class="book-btn" (click)="bookParking()">Boka parkering för den valda dagen</button>
                     <button class="delete-btn" *ngIf="showDeleteButton" (click)="confirmDelete()">Ta bort bokning</button>
     </div>
+    <div class="container container-keys">
+        <table class="keys-table">
+            <thead>
+                <tr>
+                    <th>Nyckel</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let key of keys">
+                    <td>{{ key.name }}</td>
+                    <td>{{ key.status ? 'Ledig' : 'Upptagen' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+        </div>
  </div>
  </div>
